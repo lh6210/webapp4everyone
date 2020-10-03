@@ -1,0 +1,27 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+</head>
+<body>
+<form method="get">
+  <?php
+  $oldguess = isset($_GET)? $_GET: '';
+
+	<p><label for="guess_input">Input Guess</label><br>
+	<input type="text" name="guess" id="guess_input" value= $oldguess/></p>
+	<input type="submit">
+  ?>
+</form>
+
+<pre>
+<?php
+print_r($_GET);
+?>
+</pre>
+
+</body>
+</html>
