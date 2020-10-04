@@ -4,16 +4,11 @@ require_once "pdo.php";
 if ( isset($_POST['name']) && isset($_POST['email']) 
      && isset($_POST['password'])) {
     $data = array ( ':name'=> $_POST['name'], ':email'=>$_POST['email'], ':password'=>$_POST['password']);
-
-
     $sql = "INSERT INTO users (name, email, password) 
               VALUES (:name, :email, :password)";
     echo("<pre>\n".$sql."\n</pre>\n");
     $stmt = $pdo->prepare($sql);
-    $stmt->execute(array(
-        ':name' => $_POST['name'],
-        ':email' => $_POST['email'],
-        ':password' => $_POST['password']));
+    $stmt->execute( $data);
 }
 
 $stmt = $pdo->query("SELECT name, email, password FROM users");
@@ -21,7 +16,10 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <html>
-<head></head><body><table border="1">
+<head></head>
+<body>
+
+<table border="1">    <!-- display table users on html page -->
 <?php
 echo "<tr><th>name</th>
 	<th>email</th>

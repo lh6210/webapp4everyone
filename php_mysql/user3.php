@@ -33,7 +33,7 @@ foreach ( $rows as $row ) {
     echo($row['email']);
     echo("</td><td>");
     echo($row['password']);
-    echo("</td><td>");
+    echo("</td><td>");  // the last table cell contains a tiny form 
     echo('<form method="post"><input type="hidden" ');
     echo('name="user_id" value="'.$row['user_id'].'">'."\n");
     echo('<input type="submit" value="Del" name="delete">');

@@ -1,7 +1,12 @@
 <?php
 echo "<pre>\n";
-$pdo = new PDO('mysql:host=localhost;port=8889;dbname=misc',
-    'fred', 'zap');
+$host='localhost';
+$port=3306;
+$db='misc';
+$user='lh';
+$pw='a123';
+$pdo = new PDO("mysql:host=$host;port=$port;dbname=$db",
+    $user, $pw);
 
 $stmt = $pdo->query("SELECT * FROM users");
 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);

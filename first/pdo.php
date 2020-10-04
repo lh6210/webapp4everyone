@@ -8,4 +8,5 @@ $user = 'lh';
 $pass = 'a123';
 $dsn ="mysql:host=$hostname;port=$port;dbname=$dbname";  // must be double quotes
 $pdo = new PDO($dsn, $user, $pass);
+$pdo->setAttribute(PDO::attr_errmode, PDO::ERRMODE_EXCEPTION);
 ?>
