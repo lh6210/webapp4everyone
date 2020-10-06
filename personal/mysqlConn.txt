@@ -1,0 +1,50 @@
+create table courses (
+    course_id int AUTO_INCREMENT not null,
+    name varchar(100),
+    website varchar(100),
+    lecturer_id int,
+    status_id int,
+    category_id int,
+    tuition int,
+	certificate varchar(100),
+    
+    primary key (course_id),
+    CONSTRAINT categoryFK foreign key (category_id) REFERENCES category(id)
+        on delete CASCADE on update CASCADE,
+    constraint lecturerFK foreign key (lecturer_id) REFERENCES lecturer(id)
+    	on DELETE CASCADE on UPDATE CASCADE,
+    CONSTRAINT statusFK FOREIGN key (status_id) REFERENCES course_status(id)
+		on DELETE CASCADE on UPDATE CASCADE
+) engine=INNODB;
+
+create table category (
+	id int not null auto_increment,
+	name varchar(100),
+	primary key (id) ) engine= INNODB;
+
+create table course_status (
+	id int not null auto_increment,
+	name varchar(30),
+	primary key(id) ) engine = INNODB;
+
+create table lecturer (
+	id int not null auto_increment primary key,
+	name varchar(50),
+	info varchar(100)) engine = INNODB
+
+insert into course_status(name) values ('completed');	
+insert into course_status(name) values ('ongoing');
+insert into category(name) values ('front end development');
+insert into category(name) values ('back end development');	
+insert into lecturer(name) values ('Charles Severance');
+	
+	
+insert into courses (name, website, lecturer_id, status_id, category_id, tuition, certificate) values ('Web Design for Everybody: Basics of Web Development $ Coding Specification', 'https://www.coursera.org/specializations/web-design', 2, 1, 1, 50, 'https://www.coursera.org/account/accomplishments/specialization/certificate/A6YSVDCTHNT5');	
+
+	
+mysql --host=sql304.byethost33.com --port=3306 -u b33_26749185 -p b33_26749185_LearningPath
+	
+	
+	
+	
+	

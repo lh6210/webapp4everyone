@@ -1,0 +1,115 @@
+
+
+html, body {
+	height: 100%;
+}
+
+
+
+header, footer {
+	/* background-image: url("../pics/sailboat.jpg"); */
+	background-image: linear-gradient(90deg, rgba(34, 152, 221, 1),rgba(211, 234, 248, 1));
+	/* height: 35px; */
+}
+
+
+.nav {
+	width: 100%;
+	/* border: 1px solid black; */
+	padding-right: 0;
+}
+
+
+
+.nav-link {
+	/* background-color: rgb(24, 46, 85); */
+	/* border: 1px solid black; */
+	width: auto;
+	/* padding-left: 20px; */
+}
+
+.layout {
+	border: 1px solid black;
+}
+
+.main {
+	/* border: 1px solid black; */
+	/* flex-basis: 80%; */
+	/* flex-grow: 1; */
+	/* flex-grow: 1; */
+}
+
+table, th, td {
+	border: 1px solid black;
+}
+
+th, td {
+	padding-left: 1rem;
+	padding-right: 1rem;
+}
+
+
+tr:first-child {
+	width: 35%;
+}
+
+
+
+
+footer {
+	/* border: 1px solid black; */
+	height: 30px;
+	/* align-self: flex-end; */
+}
+
+@media
+only screen and (max-width: 992px) {
+	table, thead, tbody, th, td, tr {
+		display: block;
+	}
+
+	thead tr {
+		position: absolute;
+		top: -9999px;
+		left: -9999px;
+	}
+
+	td {
+		width: 20rem;
+		border: 1px solid red;
+		position: relative;
+		left: 10rem;
+		padding-left: 50%;
+	}
+
+	td:before {
+		position: absolute;
+		top: 6px;
+		left: 6px;
+		width: 45%;
+		padding-right: 10px;
+		white-space: nowrap;
+	}
+	td.tbl1:nth-of-type(1):before {content: 'Course';}
+	td.tbl1:nth-of-type(2):before {content: 'Category';}
+	td.tbl1:nth-of-type(3):before {content: 'Cerificate';}
+	td.tbl1:nth-of-type(4):before {content: 'Start Date';}
+	td.tbl1:nth-of-type(5):before {content: 'End Date';}
+}
+
+/*
+#tbl_completed td {
+@media (max-width: 992px) {
+	td:nth-of-type(1):before {content: 'Course';}
+	td:nth-of-type(2):before {content: 'Category';}
+	td:nth-of-type(3):before {content: 'Cerificate';}
+	td:nth-of-type(4):before {content: 'Start Date';}
+	td:nth-of-type(5):before {content: 'End Date';}
+	}
+}
+*/
+
+
+
+
+
