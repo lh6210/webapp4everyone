@@ -13,6 +13,7 @@ if ( isset($_POST['name']) && isset($_POST['email'])
         ':password' => $_POST['password']));
 }
 
+// isset($_POST['user_id']) should be always true, since the hidden field is there only when it's set
 if ( isset($_POST['delete']) && isset($_POST['user_id']) ) {
     $sql = "DELETE FROM users WHERE user_id = :zip";
     echo "<pre>\n$sql\n</pre>\n";
@@ -34,8 +35,8 @@ foreach ( $rows as $row ) {
     echo("</td><td>");
     echo($row['password']);
     echo("</td><td>");  // the last table cell contains a tiny form 
-    echo('<form method="post"><input type="hidden" ');
-    echo('name="user_id" value="'.$row['user_id'].'">'."\n");
+    echo('<form method="post">');
+    echo("<input type='hidden' name='user_id' value={$row['user_id']}><br>");
     echo('<input type="submit" value="Del" name="delete">');
     echo("\n</form>\n");
     echo("</td></tr>\n");

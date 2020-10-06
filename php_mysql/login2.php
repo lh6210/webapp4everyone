@@ -9,12 +9,12 @@ if ( isset($_POST['email']) && isset($_POST['password'])  ) {
     $sql = "SELECT name FROM users 
         WHERE email = :em AND password = :pw";
 
+    $data = array(':em'=> $_POST['email'], ':pw'=>$_POST['password']);
+
     echo "<p>$sql</p>\n";
 
     $stmt = $pdo->prepare($sql);
-    $stmt->execute(array(
-        ':em' => $_POST['email'], 
-        ':pw' => $_POST['password']));
+    $stmt->execute($data);
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
     var_dump($row);

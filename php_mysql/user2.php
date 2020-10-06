@@ -1,17 +1,20 @@
 <?php
 require_once "pdo.php";
 
+// the submit action in the form will trigger an insertion of a new record
 if ( isset($_POST['name']) && isset($_POST['email']) 
      && isset($_POST['password'])) {
     $data = array ( ':name'=> $_POST['name'], ':email'=>$_POST['email'], ':password'=>$_POST['password']);
     $sql = "INSERT INTO users (name, email, password) 
-              VALUES (:name, :email, :password)";
+              VALUES (:name, :email, :password)";  //placeholders
     echo("<pre>\n".$sql."\n</pre>\n");
     $stmt = $pdo->prepare($sql);
-    $stmt->execute( $data);
+    $stmt->execute( $data);  // corresponding key-value pairs
 }
 
-$stmt = $pdo->query("SELECT name, email, password FROM users");
+// display all the records in the database on the page
+$stmt = $pdo->prepare("SELECT name, email, password FROM users");
+$stmt->execute();
 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
