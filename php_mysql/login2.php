@@ -3,6 +3,7 @@ require_once "pdo.php";
 
 // p' OR '1' = '1
 
+// login in function verifying email and corresponding password, cool 
 if ( isset($_POST['email']) && isset($_POST['password'])  ) {
     echo("<p>Handling POST data...</p>\n");
 
@@ -21,7 +22,7 @@ if ( isset($_POST['email']) && isset($_POST['password'])  ) {
    if ( $row === FALSE ) {
       echo "<h1>Login incorrect.</h1>\n";
    } else { 
-      echo "<p>Login success.</p>\n";
+      echo "<p>Login success. Welcome {$row['name']}</p>\n";
    }
 }
 ?>
