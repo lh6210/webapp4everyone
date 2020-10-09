@@ -1,35 +1,77 @@
-<?php
-    session_start();
-    if ( isset($_POST["account"]) && isset($_POST["pw"]) ) {
-        unset($_SESSION["account"]);  // Logout current user
-        if ( $_POST['pw'] == 'umsi' ) {
-            $_SESSION["account"] = $_POST["account"];
-            $_SESSION["success"] = "Logged in.";
-            header( 'Location: app.php' ) ;
-            return;
+<?php // Do not put any HTML above this line
+session_start();
+
+$email = isset($_SESSION['who'])?$_SESSION['who']:'';
+
+if ( isset($_POST['cancel'] ) ) {
+    // Redirect the browser to game.php
+    header("Location: index.php");
+    exit;
+}
+
+$salt = 'XyZzy12*_';
+$stored_hash = '1a52e17fa899cf40fb04cfc42e6352f1';  // Pw is php123
+
+
+// $hint= false;  // If we have no POST data
+
+// Check to see if we have some POST data, if we do process it
+if ( isset($_POST['login_sbmt']) ) {
+    $_SESSION['who'] = htmlentities($_POST['who']); // $_SESSION['who'] is recorded
+    if ( strlen($_POST['who']) < 1 || strlen($_POST['pass']) < 1 ) {
+        $_SESSION['hint']= "User name and password are required";
+	header('Location: login.php');
+	exit;
+    } 
+    elseif (strpos($_POST['who'], '@') == false) { 
+	$_SESSION['hint'] = "Email must have an at-sign (@)";
+	header('Location: login.php');
+	exit;
+    }
+    else {
+        $check = hash('md5', $salt.$_POST['pass']);
+        if ( $check == $stored_hash && $_SESSION['who'] == 'csev@umich.edu') {
+            // Redirect the browser to game.php
+	    error_log("Login success ".$_SESSION['who']);
+            header('Location: view.php');
+            exit;
         } else {
-            $_SESSION["error"] = "Incorrect password.";
-            header( 'Location: login.php' ) ;
-            return;
+            $_SESSION['hint']= "Incorrect password";
+	    error_log("Login fail ".$_SESSION['who']." $check");
+	    header('Location: login.php');
+	    exit;
         }
     }
+}
+
+// Fall through into the View
 ?>
+<!DOCTYPE html>
 <html>
 <head>
+<title>H Li</title>
 </head>
-<body style="font-family: sans-serif;">
+<body>
+<div class="container">
 <h1>Please Log In</h1>
 <?php
-    if ( isset($_SESSION["error"]) ) {
-        echo('<p style="color:red">'.$_SESSION["error"]."</p>\n");
-        unset($_SESSION["error"]);
-    }
+// Note triple not equals and think how badly double
+// not equals would work here...
+if (isset($_SESSION['hint'])) {
+    // Look closely at the use of single and double quotes
+    echo('<p style="color: red;">'.$_SESSION['hint']."</p>\n");
+    $_SESSION['hint'] = false;
+}
 ?>
-<form method="post">
-<p>Account: <input type="text" name="account" value=""></p>
-<p>Password: <input type="text" name="pw" value=""></p>
-<!-- password is umsi -->
-<p><input type="submit" value="Log In">
-<a href="app.php">Cancel</a></p>
+<form method="POST">
+<label for="nam">Email</label>
+<input type="text" name="who" id="nam" value= "<?= $email ?>"><br/>
+<label for="id_1723">Password</label>
+<input type="text" name="pass" id="id_1723"><br/>
+<!-- submit -->
+<input type="submit" name="login_sbmt" value="Log In">
+<!-- cancel -->
+<input type="submit" name="cancel" value="Cancel">
 </form>
+</div>
 </body>
