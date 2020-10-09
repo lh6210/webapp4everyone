@@ -22,9 +22,13 @@ if (isset($_POST['cancel'])) {
 // add a new record, validate and redirect with a message
 if (isset($_POST['add'])) {
 	if (empty($_POST['make'])) {
-		echo 'Make is required';
+		$_SESSION['error'] = 'Make is required';
+		header('Location:add.php');
+		exit;
 	} elseif (!is_numeric($_POST['mileage']) || !is_numeric($_POST['year'])) {
-		echo 'Mileage and year must be numeric.';
+		$_SESSION['error']='Mileage and year must be numeric.';
+		header('Location:add.php');
+		exit;
 	}
 	else {
 		$sql = "insert into autos (make, year, mileage) values (:make, :year, :mileage)";
@@ -48,6 +52,12 @@ if (isset($_POST['add'])) {
 </head>
 <body>
 <h1>Tracking Autos for <?= $_SESSION['who'] ?></h1>
+<?php 
+if (isset($_SESSION['error'])) {
+	echo $_SESSION['error'];
+	$_SESSION['error'] = false;
+}
+?>
 <form method='POST'>
 <label for='make'>Make:</label><br>
 <input type='text' name='make' id='make'><br>

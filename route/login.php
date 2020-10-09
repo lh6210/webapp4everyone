@@ -73,6 +73,6 @@ if (isset($_SESSION['hint'])) {
 <!-- cancel -->
 <input type="submit" name="cancel" value="Cancel">
 </form>
-<a href="#">Add New</a>
+<!--<a href="#">Add New</a>-->
 </div>
 </body>
