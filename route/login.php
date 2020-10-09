@@ -16,14 +16,14 @@ $stored_hash = '1a52e17fa899cf40fb04cfc42e6352f1';  // Pw is php123
 // $hint= false;  // If we have no POST data
 
 // Check to see if we have some POST data, if we do process it
-if ( isset($_POST['login_sbmt']) ) {
-    $_SESSION['who'] = htmlentities($_POST['who']); // $_SESSION['who'] is recorded
-    if ( strlen($_POST['who']) < 1 || strlen($_POST['pass']) < 1 ) {
+if ( isset($_POST['Add']) ) {
+    $_SESSION['who'] = htmlentities($_POST['email']); // $_SESSION['who'] is recorded
+    if ( strlen($_POST['email']) < 1 || strlen($_POST['pass']) < 1 ) {
         $_SESSION['hint']= "User name and password are required";
 	header('Location: login.php');
 	exit;
     } 
-    elseif (strpos($_POST['who'], '@') == false) { 
+    elseif (strpos($_POST['email'], '@') == false) { 
 	$_SESSION['hint'] = "Email must have an at-sign (@)";
 	header('Location: login.php');
 	exit;
@@ -65,13 +65,14 @@ if (isset($_SESSION['hint'])) {
 ?>
 <form method="POST">
 <label for="nam">Email</label>
-<input type="text" name="who" id="nam" value= "<?= $email ?>"><br/>
+<input type="text" name="email" id="nam" value= "<?= $email ?>"><br/>
 <label for="id_1723">Password</label>
 <input type="text" name="pass" id="id_1723"><br/>
 <!-- submit -->
-<input type="submit" name="login_sbmt" value="Log In">
+<input type="submit" name="Add" value="Log In">
 <!-- cancel -->
 <input type="submit" name="cancel" value="Cancel">
 </form>
+<a href="#">Add New</a>
 </div>
 </body>

@@ -4,22 +4,15 @@ require_once 'pdo.php';
 // session keys: who, msg 
 
 session_start();
+echo "<head><title>H Li</title></head>";
 
-// redirect to index.php if logout
-if (isset($_POST['logout'])) {
-    session_unset();
-    header('Location: index.php');
-}
-
-if (isset($_POST['addNew'])) {
-    header('Location: add.php');
-}
-
-
+// index.php->view.php: this will happen
 if (!isset($_SESSION['who'])) {
     die("Not logged in");
+    exit;
 }
-else {
+else // login.php/add.php->view.php 
+{
     $name=$_SESSION['who'];
     echo "<h2>Tracking Autos for $name</h2>";
 
@@ -42,16 +35,11 @@ else {
     }
 
     echo "</table>";
+    echo "<p><a href='add.php'>Add New</a>";
+    echo "<a href='index.php'>Log out</a></p>";
 
 }
 ?>
-
-<form method='POST'>
-    <input type="submit" name='addNew' value='Add New'>
-    <input type="submit" name='logout' value='Logout'>
-</form>
-
-
 
 
 

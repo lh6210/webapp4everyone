@@ -1,4 +1,10 @@
 <!DOCTYPE html>
+
+<?php
+session_start();
+session_unset();
+?>
+
 <html>
 <head>
 <title>H Li</title>
