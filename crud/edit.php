@@ -1,73 +1,76 @@
+
 <?php
-require_once "pdo.php";
+require_once 'pdo.php';
 session_start();
 
-if ( isset($_POST['name']) && isset($_POST['email'])
-     && isset($_POST['password']) && isset($_POST['user_id']) ) {
-
-    // Data validation
-    if ( strlen($_POST['name']) < 1 || strlen($_POST['password']) < 1) {
-        $_SESSION['error'] = 'Missing data';
-        header("Location: edit.php?user_id=".$_POST['user_id']);
-        return;
-    }
-
-    if ( strpos($_POST['email'],'@') === false ) {
-        $_SESSION['error'] = 'Bad data';
-        header("Location: edit.php?user_id=".$_POST['user_id']);
-        return;
-    }
-
-    $sql = "UPDATE users SET name = :name,
-            email = :email, password = :password
-            WHERE user_id = :user_id";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute(array(
-        ':name' => $_POST['name'],
-        ':email' => $_POST['email'],
-        ':password' => $_POST['password'],
-        ':user_id' => $_POST['user_id']));
-    $_SESSION['success'] = 'Record updated';
-    header( 'Location: index.php' ) ;
-    return;
+if (!isset($_GET['auto_id'])) {
+	die('ACCESS DENIED');
 }
 
-// Guardian: Make sure that user_id is present
-if ( ! isset($_GET['user_id']) ) {
-  $_SESSION['error'] = "Missing user_id";
-  header('Location: index.php');
-  return;
-}
-
-$stmt = $pdo->prepare("SELECT * FROM users where user_id = :xyz");
-$stmt->execute(array(":xyz" => $_GET['user_id']));
+$auto_id = $_GET['auto_id'];
+$sql='select * from autos where auto_id = :auto_id';
+$stmt= $pdo->prepare($sql);
+$stmt->execute([':auto_id'=>$auto_id]);
 $row = $stmt->fetch(PDO::FETCH_ASSOC);
-if ( $row === false ) {
-    $_SESSION['error'] = 'Bad value for user_id';
-    header( 'Location: index.php' ) ;
-    return;
+$make = $row['make'];
+$model = $row['model'];
+$year = $row['year'];
+$mileage = $row['mileage'];
+
+
+
+
+
+if (isset($_SESSION['error'])) {
+	echo "<p style='color: red'>{$_SESSION['error']}</p>";
+       unset($_SESSION['error']);
 }
 
-// Flash pattern
-if ( isset($_SESSION['error']) ) {
-    echo '<p style="color:red">'.$_SESSION['error']."</p>\n";
-    unset($_SESSION['error']);
+
+
+if (isset($_POST['save_sbmt'])) {
+	if (empty($_POST['make']) || empty($_POST['model']) || empty($_POST['year']) || empty($_POST['mileage'])) {
+	$_SESSION['error'] ='All fields are required';
+	header("Location:edit.php?auto_id=$auto_id");
+	exit;
+	} elseif (!is_numeric($_POST['mileage']) || !is_numeric($_POST['year'])) {
+	$_SESSION['error']='Mileage and year must be numeric.';
+	header("Location:edit.php?auto_id=$auto_id");
+	exit;
+	} else {
+	$sql2='update autos set make=:make, model=:model, year=:year, mileage=:mileage where auto_id=:auto_id';
+	$cond = array(':make'=>htmlentities($_POST['make']), ':model'=>htmlentities($_POST['model']), ':year'=>htmlentities($_POST['year']), ':mileage'=>htmlentities($_POST['mileage']), ':auto_id'=>$auto_id);
+	$stmt=$pdo->prepare($sql2);
+	$stmt->execute($cond);
+	$_SESSION['msg']='Record edited';
+	header('Location:index.php');
+	exit;
+	}
 }
 
-$n = htmlentities($row['name']);
-$e = htmlentities($row['email']);
-$p = htmlentities($row['password']);
-$user_id = $row['user_id'];
+if (isset($_POST['cancel_sbmt'])) {
+	header('Location:index.php');
+	exit;
+}
+
+
+
 ?>
-<p>Edit User</p>
-<form method="post">
-<p>Name:
-<input type="text" name="name" value="<?= $n ?>"></p>
-<p>Email:
-<input type="text" name="email" value="<?= $e ?>"></p>
-<p>Password:
-<input type="text" name="password" value="<?= $p ?>"></p>
-<input type="hidden" name="user_id" value="<?= $user_id ?>">
-<p><input type="submit" value="Update"/>
-<a href="index.php">Cancel</a></p>
+
+<form method="POST">
+<p>
+<label for="make">Make</label>
+<input type="text" name='make' value="<?=$make?>" id='make'></p><p>
+<label for="model">Model</label>
+<input type="text" name='model' value="<?=$model?>" id='model'></p><p>
+<label for="year">Year</label>
+<input type="text" name='year' value="<?=$year?>" id='year'></p><p>
+<label for="mileage">Mileage</label>
+<input type="text" name='mileage' value="<?=$mileage?>" id='mileage'></p>
+<input type="submit" name='save_sbmt' value='Save'>
+<input type="submit" name='cancel_sbmt' value='Cancel'>
 </form>
+
+
+
+
