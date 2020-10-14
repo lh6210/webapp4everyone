@@ -94,11 +94,35 @@ if (isset($_SESSION['hint'])) {
 <label for="id_1723">Password</label>
 <input type="text" name="pass" id="id_1723"><br/>
 <!-- submit -->
-<input type="submit" name="login" value="Log In">
+<input type="submit" name="login" value="Log In" onclick="return doValidate();">
 <!-- cancel -->
 <input type="submit" name="cancel" value="Cancel">
 </form>
 <!--<a href="#">Add New</a>-->
 </div>
+
+
+<script>
+function doValidate() {
+    console.log('Validating...');
+    var name = document.getElementById('nam');
+    var pw = document.getElementById('id_1723');
+    if (!name.value || !pw.value) {
+	alert('Both fields must be filled out.');
+	return false;
+    } else {
+	return true;
+    }
+}
+
+
+</script>
+
+
+
+
+
+
+
 </body>
 </html>
