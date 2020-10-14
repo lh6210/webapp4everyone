@@ -1,44 +1,49 @@
 <?php 
 require_once 'pdo.php';
 
-// session keys: who, msg
-
+// session keys: user_id, msg, name, email, error
+// error is the flash message for add.php
+// msg is the flash message for index.php
+// email comes from index.php and is for profile.email
+// name is for header on add.php
 session_start();
+    
+
+
 
 // if not logged in
-if (!isset($_SESSION['who'])) {
+if (!isset($_SESSION['user_id'])) {
     echo "<head><title>H Li</title></head>";
     die('ACCESS DENIED');
 }
 
-// cancel adding records and head to view.php, no msg
+// cancel adding records and head to index.php, no msg
 if (isset($_POST['cancel'])) {
-	$_SESSION['msg'] = false;
-	header('Location: index.php');
-	exit;
+    unset($_SESSION['msg']);
+    header('Location: index.php');
+    exit;
 }
 
 // add a new record, validate and redirect with a message
 if (isset($_POST['add'])) {
-	if (empty($_POST['make']) || empty($_POST['model']) || empty($_POST['year']) || empty($_POST['mileage'])) {
+    if (empty($_POST['firstName']) || empty($_POST['lastName']) || empty($_POST['email']) || empty($_POST['headline']) || empty($_POST['summary'])) {
 		$_SESSION['error'] = 'All fields are required';
 		header('Location:add.php');
 		exit;
-	} elseif (!is_numeric($_POST['mileage']) || !is_numeric($_POST['year'])) {
-		$_SESSION['error']='Mileage and year must be numeric.';
+	} elseif (strpos($_POST['email'], '@') == false) {
+		$_SESSION['error']='Email address must contain @';
 		header('Location:add.php');
 		exit;
 	}
 	else {
-		$sql = "insert into autos (make, model, year, mileage) values (:make, :model, :year, :mileage)";
-		$data = array(':make'=> htmlentities($_POST['make']), ':model'=>htmlentities($_POST['model']), ':year'=>htmlentities($_POST['year']), ':mileage'=>htmlentities($_POST['mileage']));
+		$sql = "insert into profile (user_id, first_name, last_name, email, headline, summary) values (:user_id, :firstName, :lastName, :email, :headline, :summary)";
+		$data = array(':user_id'=> $_SESSION['user_id'], ':firstName'=>htmlentities($_POST['firstName']), ':lastName'=>htmlentities($_POST['lastName']), ':email'=>htmlentities($_POST['email']), ':headline'=>htmlentities($_POST['headline']), ':summary'=>htmlentities($_POST['summary']));
 		$stmt = $pdo->prepare($sql);
 		$stmt->execute($data);
 
 		$_SESSION['msg'] = 'Record inserted';
 		header('location:index.php');
 		exit;
-		//echo 'Record inserted!';
 	}
 }
 ?>
@@ -50,7 +55,7 @@ if (isset($_POST['add'])) {
 	<title>H Li</title>
 </head>
 <body>
-<h1>Tracking Autos for <?= $_SESSION['who'] ?></h1>
+<h1>Adding Profile for <?= $_SESSION['name'] ?></h1>
 <?php 
 if (isset($_SESSION['error'])) {
 	echo "<p style='color: red'>{$_SESSION['error']}</p>";
@@ -58,14 +63,16 @@ if (isset($_SESSION['error'])) {
 }
 ?>
 <form method='POST'>
-<label for='make'>Make:</label><br>
-<input type='text' name='make' id='make'><br>
-<label for='model'>Model:</label><br>
-<input type='text' name='model' id='model'><br>
-<label for='yr'>Year:</label><br>
-<input type='text' name='year' id='yr'><br>
-<label for='miles'>Mileage:</label><br>
-<input type='text' name='mileage' id='miles'><br>
+<label for='firstName'>First Name:</label><br>
+<input type='text' name='firstName' id='firstName'><br>
+<label for='lastName'>Last Name:</label><br>
+<input type='text' name='lastName' id='lastName'><br>
+<label for='email'>Email:</label><br>
+<input type='text' name='email' id='email' value= <?= $_SESSION['email'] ?>><br>
+<label for='headline'>Headline:</label><br>
+<input type='text' name='headline' id='headline'><br>
+<label for='summary'>Summary:</label><br>
+<input type='text' name='summary' id='summary'><br>
 <input type='submit' name='add' value='Add'>
 <input type='submit' name='cancel' value='Cancel'>
 </form>

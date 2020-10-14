@@ -1,31 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>  <!-- head meta data -->
-    <?php require_once 'pdo.php'
-    ?>
+    <?php require_once 'pdo.php'?>
     <meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Math Vista</title>
     <!-- bootstrap CSS-->
-		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-		<link rel="stylesheet" href="stylesheets/style.css">
-		<!-- icon -->
-		<script src="https://kit.fontawesome.com/cbc558647c.js" crossorigin="anonymous"></script>
-		<link rel="icon" href="assets/icons/feather-alt-solid.svg">
-		<!-- MathJax -->
-		<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-		<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-		<!-- MathJax ends -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<link rel="stylesheet" href="stylesheets/style.css">
+	<!-- icon -->
+	<script src="https://kit.fontawesome.com/cbc558647c.js" crossorigin="anonymous"></script>
+	<link rel="icon" href="assets/icons/feather-alt-solid.svg">
+	<!-- MathJax -->
+	<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+	<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+	<!-- MathJax ends -->
   </head>  <!-- head ends -->
 
   <body>
-		<div class="container-fluid">
-			<!-- header of the body -->
-			<div class="row">  <!-- header -->
-				<header class="col-12">
-					<h1 class="text-center">Math and Plot</h1>
-				</header>
-			</div>  <!-- header ends -->
+	<div class="container-fluid">
+	<!-- header of the body -->
+	<div class="row">  <!-- header -->
+	    <header class="col-12">
+	        <h1 class="text-center">Math and Plot</h1>
+	    </header>
+	</div>  <!-- header ends -->
 
 			<div class="row">
 				<div class="col-12">  <!-- sidebar -->

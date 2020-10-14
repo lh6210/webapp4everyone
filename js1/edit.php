@@ -1,76 +1,79 @@
-
+<!DOCTYPE html>
 <?php
 require_once 'pdo.php';
 session_start();
-
-if (!isset($_GET['auto_id'])) {
-	die('ACCESS DENIED');
-}
-
-$auto_id = $_GET['auto_id'];
-$sql='select * from autos where auto_id = :auto_id';
-$stmt= $pdo->prepare($sql);
-$stmt->execute([':auto_id'=>$auto_id]);
-$row = $stmt->fetch(PDO::FETCH_ASSOC);
-$make = $row['make'];
-$model = $row['model'];
-$year = $row['year'];
-$mileage = $row['mileage'];
+// session variables: name, user_id, error
+// cookie variables: $_GET['profile_id']
 
 
+if (!isset($_SESSION['user_id']) || !isset($_GET['profile_id'])) {
+	die ('ACCESS DENIED');
+} else {
 
-
-
-if (isset($_SESSION['error'])) {
-	echo "<p style='color: red'>{$_SESSION['error']}</p>";
-       unset($_SESSION['error']);
-}
-
-
-
-if (isset($_POST['save_sbmt'])) {
-	if (empty($_POST['make']) || empty($_POST['model']) || empty($_POST['year']) || empty($_POST['mileage'])) {
-	$_SESSION['error'] ='All fields are required';
-	header("Location:edit.php?auto_id=$auto_id");
-	exit;
-	} elseif (!is_numeric($_POST['mileage']) || !is_numeric($_POST['year'])) {
-	$_SESSION['error']='Mileage and year must be numeric.';
-	header("Location:edit.php?auto_id=$auto_id");
-	exit;
-	} else {
-	$sql2='update autos set make=:make, model=:model, year=:year, mileage=:mileage where auto_id=:auto_id';
-	$cond = array(':make'=>htmlentities($_POST['make']), ':model'=>htmlentities($_POST['model']), ':year'=>htmlentities($_POST['year']), ':mileage'=>htmlentities($_POST['mileage']), ':auto_id'=>$auto_id);
-	$stmt=$pdo->prepare($sql2);
-	$stmt->execute($cond);
-	$_SESSION['msg']='Record edited';
-	header('Location:index.php');
-	exit;
+	if (isset($_SESSION['error'])) {
+		echo "<p style='color: red'>{$_SESSION['error']}</p>";
+	    unset($_SESSION['error']);
 	}
+
+	$profile_id = $_GET['profile_id'];
+
+
+	if (isset($_POST['save_sbmt'])) {
+		if (empty($_POST['firstName']) || empty($_POST['lastName']) || empty($_POST['email']) || empty($_POST['headline']) || empty($_POST['summary'])) {
+			$_SESSION['error'] = 'All fields are required';
+			header('Location:edit.php');
+			exit;
+		} elseif (strpos($_POST['email'], '@') == false) {
+			$_SESSION['error']='Email address must contain @';
+			header('Location:edit.php');
+			exit;
+		}
+		else {
+			$sql = "update profile set first_name = :firstName, last_name = :lastName, email = :email, headline = :headline, summary = :summary where profile_id = :profile_id"; 
+			$data = array(':firstName'=>htmlentities($_POST['firstName']), ':lastName'=>htmlentities($_POST['lastName']), ':email'=>htmlentities($_POST['email']), ':headline'=>htmlentities($_POST['headline']), ':summary'=>htmlentities($_POST['summary']), ':profile_id'=>$profile_id);
+			$stmt = $pdo->prepare($sql);
+			$stmt->execute($data);
+
+			$_SESSION['msg'] = 'Record updated';
+			header('location:index.php');
+			exit;
+		}
+	}
+
+
+	if (isset($_POST['cancel_sbmt'])) {
+		header('Location:index.php');
+		exit;
+	}
+
+
+
+	$sql='select * from profile where profile_id = :profile_id';
+	$stmt= $pdo->prepare($sql);
+	$stmt->execute([':profile_id'=>$profile_id]);
+	$row = $stmt->fetch(PDO::FETCH_ASSOC);
+	$firstName = $row['first_name'];
+	$lastName = $row['last_name'];
+	$email = $row['email'];
+	$headline = $row['headline'];
+	$summary = $row['summary'];
+
+	echo "<form method='POST'>";
+	echo "<label for='firstName'>First Name:</label><br>";
+	echo "<input type='text' name='firstName' id='firstName'value = $firstName ><br>";
+	echo "<label for='lastName'>Last Name:</label><br>";
+	echo "<input type='text' name='lastName' id='lastName' value= $lastName><br>";
+	echo "<label for='email'>Email:</label><br>";
+	echo "<input type='text' name='email' id='email' value=$email><br>";
+	echo "<label for='headline'>Headline:</label><br>";
+	echo "<input type='text' name='headline' id='headline' value=$headline><br>";
+	echo "<label for='summary'>Summary:</label><br>";
+	echo "<input type='text' name='summary' id='summary' value=$summary><br>";
+	echo "<input type='submit' name='save_sbmt' value='Save'>";
+	echo "<input type='submit' name='cancel_sbmt' value='Cancel'>";
+	echo "</form>";
+
 }
-
-if (isset($_POST['cancel_sbmt'])) {
-	header('Location:index.php');
-	exit;
-}
-
-
-
 ?>
-
-<form method="POST">
-<p>
-<label for="make">Make</label>
-<input type="text" name='make' value="<?=$make?>" id='make'></p><p>
-<label for="model">Model</label>
-<input type="text" name='model' value="<?=$model?>" id='model'></p><p>
-<label for="year">Year</label>
-<input type="text" name='year' value="<?=$year?>" id='year'></p><p>
-<label for="mileage">Mileage</label>
-<input type="text" name='mileage' value="<?=$mileage?>" id='mileage'></p>
-<input type="submit" name='save_sbmt' value='Save'>
-<input type="submit" name='cancel_sbmt' value='Cancel'>
-</form>
-
-
 
 
