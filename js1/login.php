@@ -108,10 +108,10 @@ function doValidate() {
     var name = document.getElementById('nam');
     var pw = document.getElementById('id_1723');
     if (!name.value || !pw.value) {
-	alert('Both fields must be filled out.');
-	return false;
+		alert('Both fields must be filled out.');
+		return false;
     } else {
-	return true;
+		return true;
     }
 }
 
