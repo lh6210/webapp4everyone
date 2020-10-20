@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+</head>
+<body>
+  <form method='POST'>
+    <label for="txt1">Color:</label>
+    <input type="text" id='txt1' name='color'>
+    <label for="txt2">Location:</label>
+    <input type="text" id='txt2' name='location'>
+    <input type="submit" value='Submit'>
+  </form>
+
+  <p></p>
+
+
+  <script>
+    $('form').submit(function() {
+      var msg = $('form').serialize();
+      // serialize method makes the query string
+      console.log('message is: ' + msg);
+      // data, which we received here, is a Javascript object or string 
+      // watch the network monitor in the developer tool, the server side sent the JSON string, but the data here is a JS string
+      // something magical happened in the process
+      $.post('c3-back.php', msg, function(data) {
+          // typeof data is a JS string 
+          console.log('type of data is: ' + typeof(data));
+          $('p').html(data);
+          // convert the JS string to JS object
+          var obj = JSON.parse(data);
+          console.log(obj.color);
+        });
+      // prevent the client going to the server side
+      return false;
+      }); 
+
+  </script>
+</body>
+</html>

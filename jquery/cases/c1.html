@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Demo-client</title>
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+</head>
+<body>
+
+  <form id="fm1">
+    <label for="txt1">Name:</label>
+    <input type="text" id="txt1" name='name'>
+    <label for="txt2">Email:</label>
+    <input type="text" id='txt2' name='email'>
+
+  </form>
+
+  <input type="button" id='btn1' value='send message'>
+
+  <p id="response"></p>
+  <script>
+  document.getElementById("btn1").onclick = function() { 
+      // get the form data
+      var msg = new FormData(document.getElementById("fm1"))
+      console.log(Object.values(msg));
+      makeRequest('c1-back.php', msg); 
+  };
+
+  function makeRequest(url, msg) {
+    var httpRequest = new XMLHttpRequest();
+    httpRequest.onreadystatechange = alertContents;
+
+    httpRequest.open('POST', url);
+    httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    httpRequest.send(msg);  // already encoded as a query string text
+    console.log("message is sent.");
+
+    function alertContents() {
+      if (httpRequest.readyState === XMLHttpRequest.DONE) {
+        if (httpRequest.status === 200) {
+          // decode json-encoded mssage from the server
+          // the return value would be javascript object 
+          var response = JSON.parse(httpRequest.responseText);
+          // transform javascript object to javascript array
+          var myArray = Object.values(response);
+          alert(response.weather);
+          $("#response").html(myArray);
+        } else {
+          alert('There was a problem with the request.');
+        }
+      }
+    }
+  }
+  
+    /*
+    $("#b12").click(function(event) {
+      //event.preventDefault();
+      var msg = {user_id:"143", username:"ninja"};
+      $.post('c1-back.php', msg, function(data) {
+        $('#response').html(data);
+      });
+      return false;
+    });
+    */
+/*
+    document.getElementById("b12").addEventListener("click", makeRequest);
+
+    function makeRequest() {
+      var request = new XMLHttpRequest();
+      if (!request) {
+        alert('Giving up: (cannot make a http request.');
+        return false;
+      }
+      request.onreadystatchange = alertContents;
+      request.open('POST', 'c1-back.php');
+      request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+      var msg = {user_id:"143", username:"ninja"};
+      console.log("message is created: " + msg);
+      request.send(msg);
+      console.log("message is sent.");
+    
+      function alertContents() {
+        if (request.readyState === XMLHttpRequest.DONE) {
+          if (request.status === 200) {
+            console.log(request.responseText);
+          } else {
+            alert('There is a problem with the request.');
+          }
+        }
+      }
+    }
+  */
+  
+  </script>
+</body>
+</html>
