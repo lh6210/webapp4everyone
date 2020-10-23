@@ -10,7 +10,7 @@
   if ( isset($_POST['message']) ) {
 		// for the first message, construct $_SESSION['chats'] array
     if ( !isset ($_SESSION['chats']) ) $_SESSION['chats'] = Array();
-		// a new message is coming in. 
+		// a new message is added into the session. 
     $_SESSION['chats'] [] = array($_POST['message'], date(DATE_RFC2822));
     header("Location: index.php");
     return;

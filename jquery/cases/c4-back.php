@@ -1,6 +1,7 @@
 <?php
   // $_POST is a PHP array
   
+  sleep(5);
   $return['snack'] = 'chocolate';
   $return['drink'] = 'grape juice';
   //$var = json_encode($return);
