@@ -5,19 +5,20 @@ $pdo = new PDO('mysql:host=localhost;port=3306;dbname=misc',
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 
-function conn_set($sql, $arr) {
+//return will be a set of rows
+function conn_set($sql, $variablesArray) {
 	global $pdo;
 	$stmt = $pdo->prepare($sql);
-	$stmt->execute($arr);
+	$stmt->execute($variablesArray);
 	$rows = $stmt->fetchall(PDO::FETCH_ASSOC);
 	return $rows;
 }
 
-
-function conn_single($sql, $arr) {
+// return will be a single row
+function conn_single($sql, $variables) {
 	global $pdo;
 	$stmt = $pdo->prepare($sql);
-	$stmt->execute($arr);
+	$stmt->execute($variables);
 	$row = $stmt->fetch(PDO::FETCH_ASSOC);
 	return $row;
 }
