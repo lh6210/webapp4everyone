@@ -8,6 +8,7 @@
 </head>
 <body>
 	<div id='posList'>
+		<span>Positions:</span>
 		<input type="button" id='addBtn' value='+'>
   </div>
 
@@ -41,18 +42,24 @@
       if (cnt < maxCnt) {
         //let elm = "<div><input type='text' name='position'+cnt><input type='button' value='-' class='delBtns'></div>";
         let container = document.createElement('div');
-        let st = 'position' + toString(cnt);
+        //let st = 'position' + toString(cnt);
+				// input box
         let inputTxt = document.createElement('input');
         inputTxt.setAttribute('type', 'text');
+				// delete button and its eventListener
         let inputBtn = document.createElement('input');
         inputBtn.setAttribute('type', 'button');
         inputBtn.setAttribute('value', '-');
         inputBtn.addEventListener('click', delPosBox);
+				// append these nodes to the container
         container.append(inputTxt);
         container.append(inputBtn);
 
+				// append the container to the position list
         $('#posList').append(container);
+				// update the # of positions
         cnt++;
+				// update position information slot
         let c = document.querySelector('#cnt');
         c.innerHTML = "position number: " + cnt; 
 
