@@ -27,7 +27,7 @@ require_once 'pdo.php';
 	</style>
 </head>
 <body>
-	<form id='posList'>
+	<form id='posList' action='dbUpdate.php' method='POST'>
 		<span>Positions:
 			<button type="button" id='addBtn'>+</button>
 		</span>
@@ -91,8 +91,7 @@ require_once 'pdo.php';
 			c.innerHTML = "position number: " + cnt;
 		}
 
-
-		document.querySelector('form').onsubmit = checkChildren;
+		document.querySelector('form').onsubmit = sendMsg;
 
 		function Entry(inpt1, inpt2) {
 			this.position = inpt1;
@@ -109,7 +108,7 @@ require_once 'pdo.php';
 
 		// collect form data
 		// return is an array of Entry object
-		function checkChildren(e){
+		function sendMsg(e){
 			let msgPack = new Array();
 			e.preventDefault();	// prevent form submission
 			// formdata didn't work. guess it's static
@@ -118,43 +117,25 @@ require_once 'pdo.php';
 			let allDivs = this.querySelectorAll('div');
 			// alert(x.length);
 			allDivs.forEach(elm => {getInfo(msgPack, elm)});
-			// verify the msgPack
-			//msgPack.forEach((elm, index) => {console.log(elm , index)});
+			// verify the msgPack -- done
+			// msgPack.forEach((elm, index) => {console.log(elm , index)});
+
+			// let myJson = JSON.stringify(msgPack);
+			// console.log(myJson);
+			let url = "dbUpdate.php";
+			$.post(url, {req: msgPack}, function(data){
+				console.log("getting data back...");
+				console.log('type of data is: ' + typeof(data));
+				console.log("data: " + data);
+				let v = JSON.parse(data);
+
+				console.log(v[0].position);
+			});
 		}
 
-		function submitForm(){
-			//data validation
-			let data = new FormData(document.querySelector('form'));
-
-			//let itr = data.entries();
-			alert(JSON.stringify(Object.fromEntries(data)));
-			console.log(data);
-
-		}
 
 
 
-		/* no more needed code
-
-		// $.add() test
-		$(document).ready(function() {
-			//$('p').add('div').css('background-color', 'yellow');
-			$('p, div').css('background-color','yellow');
-		});
-
-    // minus one because the first child of posList is the input button '+' 
-    function checkCnt() {
-      let cnt =document.querySelector('#posList').children;
-      console.log('the # of position boxes: ' + (cnt.length - 1));
-      return cnt.length;
-    }
-
-    // add eventListeners to a certain existing class 
-    const buttons = document.getElementsByClassName('delBtns');
-    for (const button of buttons) {
-      button.addEventListener('click', delPosBox);
-    }
-		*/
 	</script>
 </body>
 </html>

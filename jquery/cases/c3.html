@@ -21,12 +21,14 @@
     $('form').submit(function() {
       var msg = $('form').serialize();
       // serialize method makes the query string
+      console.log("JSON data is ready!");
       console.log('message is: ' + msg);
       // data, which we received here, is a Javascript object or string 
       // watch the network monitor in the developer tool, the server side sent the JSON string, but the data here is a JS string
       // something magical happened in the process
       $.post('c3-back.php', msg, function(data) {
           // typeof data is a JS string 
+          console.log("receiving...");
           console.log('type of data is: ' + typeof(data));
           $('p').html(data);
           // convert the JS string to JS object
