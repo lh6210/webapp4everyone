@@ -99,26 +99,27 @@ require_once 'pdo.php';
 			this.description = inpt2;
 		}
 
+		// get all of the inputs from a specific div
+		function getInfo(lst, div) {
+			let input1 = div.querySelector('input');
+			let input2 = div.querySelector('textarea');
+			let msg = new Entry(input1.value, input2.value);
+			lst.push(msg);
+		}
+
+		// collect form data
+		// return is an array of Entry object
 		function checkChildren(e){
 			let msgPack = new Array();
 			e.preventDefault();	// prevent form submission
 			// formdata didn't work. guess it's static
 			// this is this form
 			// just look at the first div, which has input, button, and textarea in order
-			let x = this.querySelector('div');
-			let input1 = x.querySelector('input');
-			let input2 = x.querySelector('textarea');
-			let msg = new Entry(input1.value, input2.value);
-			// number of items in the array
-			let num = msgPack.push(msg);
-
-			//alert(inputValue.value + '/ ' + textAreaValue.value);
-			//x = JSON.stringify(x);
-			//let y = Object.values(x);
-			//alert(y);
-			msgPack.forEach(function(item, index) {
-				console.log(item, index);
-			});
+			let allDivs = this.querySelectorAll('div');
+			// alert(x.length);
+			allDivs.forEach(elm => {getInfo(msgPack, elm)});
+			// verify the msgPack
+			//msgPack.forEach((elm, index) => {console.log(elm , index)});
 		}
 
 		function submitForm(){
