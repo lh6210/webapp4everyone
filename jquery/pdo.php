@@ -1,8 +1,17 @@
 <?php
-$pdo = new PDO('mysql:host=localhost;port=3306;dbname=misc', 
-   'lh', 'a123');
+// connect to mysql
+$host = 'localhost';
+$port = 3306;
+$database = 'misc';
+$user = 'lh';
+$password = 'a123';
+$options = array(
+	PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+);
+$pdo = new PDO("mysql:host=$host;port=$port;dbname=$database",  
+   $user, $password, $options);
 // See the "errors" folder for details...
-$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+//$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 
 //return will be a set of rows
