@@ -22,13 +22,13 @@
 	</style>
 </head>
 <body>
-	<form id='posList' action='dbUpdate.php' method='POST'>
+	<form action='dbUpdate.php' method='POST'>
 		<span>Positions:
 			<button type="button" id='addBtn'>+</button>
 		</span>
-		<!--
+		
 		<div id="posList"></div>
-		-->
+	
 		<input type="submit" id='submitBtn' value='Submit'>
   </form>
 
@@ -109,7 +109,7 @@
 			// formdata didn't work. guess it's static
 			// this is this form
 			// just look at the first div, which has input, button, and textarea in order
-			let allDivs = this.querySelectorAll('div');
+			let allDivs = document.querySelector('#posList').querySelectorAll('div');
 			// alert(x.length);
 			allDivs.forEach(elm => {getInfo(msgPack, elm)});
 			// verify the msgPack -- done
