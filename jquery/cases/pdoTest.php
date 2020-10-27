@@ -14,6 +14,24 @@ CREATE TABLE IF NOT EXISTS `cars` (
 // to connect to mysql database
 require_once 'pdo.php';
 
+
+// data from front-end is an array of arrays
+function getValues($data) {
+	$params = array();
+	//rowParam is for each object in the array
+	$rowParam = array();
+	foreach($data as $obj) {
+		foreach($obj as $key => $value) {
+			// group only the values in the obj into $rowParam
+			$rowParam[] = $value;
+		}
+		$params[] = $rowParam;
+		// empty $rowParam for next obj
+		$rowParam = [];
+	}
+	return $params;
+}
+
 // simulated data from client side
 $data = array(
 		array("make" => "Nissan",
@@ -30,12 +48,15 @@ echo "<pre>";
 print_r($parsedDt);
 echo "</pre>";
 
+// placeholder ?
 $sql = "insert into cars (make, model) values (?, ?)";
 $stmt = $pdo->prepare($sql);
 try {
 	$pdo->beginTransaction();
-	foreach($parsedDt as $row) {
-			$stmt->execute($row);
+	// $obj should be an object with two values,
+	// which correspond to the two placeholders above 
+	foreach($parsedDt as $obj) {
+			$stmt->execute($obj);
 	}
 	$pdo->commit();
 	echo "Transaction completed!";
@@ -44,19 +65,5 @@ try {
 	throw($e);
 }
 
-// data from front-end is an array of arrays
-function getValues($data) {
-	$params = array();
-	$rowParam = array();
-	foreach($data as $obj) {
-		foreach($obj as $key => $value) {
-			// group only the values in the array
-			$rowParam[] = $value;
-		}
-		$params[] = $rowParam;
-		$rowParam = [];
-	}
-	return $params;
-}
 
 ?>

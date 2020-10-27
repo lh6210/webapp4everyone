@@ -1,5 +1,5 @@
 <?php 
-require_once 'pdo.php';
+//require_once 'pdo.php';
 
 //$data = isset($_POST)? $_POST:'nothing here';
 
@@ -19,6 +19,7 @@ if (isset($_POST['req'])) {
 if (isset($_POST['req'])) {
 	$arr = $_POST['req'];
 	// fetch data and update the database
+	echo json_encode($arr);
 
 
 } else {

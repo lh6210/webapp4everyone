@@ -22,7 +22,7 @@
 	</style>
 </head>
 <body>
-	<form action='dbUpdate.php' method='POST'>
+	<form method='POST'>
 		<span>Positions:
 			<button type="button" id='addBtn'>+</button>
 		</span>
@@ -117,7 +117,7 @@
 
 			// let myJson = JSON.stringify(msgPack);
 			// console.log(myJson);
-			let url = "dbUpdate.php";
+			let url = "serverFeedback.php";
 			$.post(url, {req: msgPack}, function(data){
 				console.log("getting data back...");
 				console.log('type of data is: ' + typeof(data));

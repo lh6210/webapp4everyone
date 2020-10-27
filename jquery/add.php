@@ -76,7 +76,22 @@ if (isset($_SESSION['error'])) {
 <input type='text' name='summary' id='summary'><br>
 <input type='submit' name='add' value='Add'>
 <input type='submit' name='cancel' value='Cancel'>
+
 </form>
 	
+<script>
+	let userId = <?= $_SESSION['user_id']?>;
+	let profileId = <?= $_SESSION['profile_id']?>;
+	console.log(uid);
+
+
+	
+	
+
+
+</script>
+
+
+
 </body>
 </html>
