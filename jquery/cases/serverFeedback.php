@@ -20,8 +20,6 @@ if (isset($_POST['req'])) {
 	$arr = $_POST['req'];
 	// fetch data and update the database
 	echo json_encode($arr);
-
-
 } else {
 	$response = ['error'=>'No input specified'];
 	echo json_encode($response);
