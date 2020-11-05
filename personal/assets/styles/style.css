@@ -2,17 +2,42 @@
 
 html, body {
 	height: 100%;
+	font-size:1rem;
 }
 
+.container.page {
+	min-height: 100vh;
+}
 
+.main {
+	border: 1px solid black;
+}
 
-header, footer {
+.app {
+	color: #191970;
+}
+
+.notes {
+	color: #405d27;
+	font-size: 1rem;
+	margin-left: 3rem;
+}
+
+.row.pen {
+	background-color: black;
+}
+
+button {
+	background-color: #92a8d1;
+}
+
+.header, .footer {
 	background-image: url("postcard.jpg"); 
 	/* background-image: linear-gradient(90deg, rgba(34, 152, 221, 1),rgba(211, 234, 248, 1)); */
 	height: 100px; 
 }
 
-footer {
+.footer {
 	height: 60px;
 }
 
@@ -20,6 +45,8 @@ footer {
 	width: 100%;
 	/* border: 1px solid black; */
 	padding-right: 0;
+	border-right: 1px solid black;
+
 }
 
 
@@ -30,34 +57,6 @@ footer {
 	width: auto;
 	/* padding-left: 20px; */
 }
-
-.layout {
-	border: 1px solid black;
-}
-
-.main {
-	/* border: 1px solid black; */
-	/* flex-basis: 80%; */
-	/* flex-grow: 1; */
-	/* flex-grow: 1; */
-}
-
-table, th, td {
-	border: 1px solid black;
-}
-
-th, td {
-	padding-left: 1rem;
-	padding-right: 1rem;
-}
-
-
-tr:first-child {
-	width: 35%;
-}
-
-
-
 
 
 @media
