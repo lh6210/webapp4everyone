@@ -66,3 +66,13 @@ button {
 	/* padding-left: 20px; */
 }
 
+@media (max-width: 576px) {
+	.header .h-elm {
+		font-size: 2rem;
+}
+
+}
+
+
+
+
