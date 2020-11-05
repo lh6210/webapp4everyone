@@ -7,11 +7,14 @@ html, body {
 
 
 header, footer {
-	/* background-image: url("../pics/sailboat.jpg"); */
-	background-image: linear-gradient(90deg, rgba(34, 152, 221, 1),rgba(211, 234, 248, 1));
-	/* height: 35px; */
+	background-image: url("postcard.jpg"); 
+	/* background-image: linear-gradient(90deg, rgba(34, 152, 221, 1),rgba(211, 234, 248, 1)); */
+	height: 100px; 
 }
 
+footer {
+	height: 60px;
+}
 
 .nav {
 	width: 100%;
@@ -56,11 +59,6 @@ tr:first-child {
 
 
 
-footer {
-	/* border: 1px solid black; */
-	height: 30px;
-	/* align-self: flex-end; */
-}
 
 @media
 only screen and (max-width: 992px) {

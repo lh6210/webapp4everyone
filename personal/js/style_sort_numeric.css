@@ -1,0 +1,18 @@
+
+
+.app {
+	color: #191970;
+	font-size: 2em;
+}
+
+.app .notes {
+	color: #405d27;
+	font-size: 1em;
+	margin-left: 2em;
+}
+
+button {
+	background-color: #92a8d1;
+	font-size: 1em;
+}
+
