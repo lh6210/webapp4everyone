@@ -19,7 +19,6 @@ html, body {
 
 .notes {
 	color: #405d27;
-	font-size: 1rem;
 	margin-left: 3rem;
 }
 
@@ -36,13 +35,17 @@ button {
 	/* background-image: linear-gradient(90deg, rgba(34, 152, 221, 1),rgba(211, 234, 248, 1)); */
 }
 
+.header>div {
+	padding:.3rem 0;
+}
+
 .header .h-elm {
-	padding:1rem .5rem;
 	font-size: 2rem;
+	padding-left: .5rem;
 }
 
 .footer>div {
-	padding: 0.5rem 0;
+	padding: 0.3rem 0;
 
 }
 
