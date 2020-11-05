@@ -34,11 +34,16 @@ button {
 .header, .footer {
 	background-image: url("postcard.jpg"); 
 	/* background-image: linear-gradient(90deg, rgba(34, 152, 221, 1),rgba(211, 234, 248, 1)); */
-	height: 100px; 
 }
 
-.footer {
-	height: 60px;
+.header .h-elm {
+	padding:1rem .5rem;
+	font-size: 2rem;
+}
+
+.footer>div {
+	padding: 0.5rem 0;
+
 }
 
 .nav {
