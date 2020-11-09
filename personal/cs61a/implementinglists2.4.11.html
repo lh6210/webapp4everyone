@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Array Comparison with numbers</title>
+    <!-- bootstrap CDN-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!-- self-made stylesheet -->
+    <link rel="stylesheet" href="../assets/styles/style.css">
+    <!-- code block -->
+    <link rel="stylesheet" href="../assets/styles/prism.css">
+    <!-- icon --> 
+    <script src="https://kit.fontawesome.com/cbc558647c.js" crossorigin="anonymous"></script>
+    <link rel="icon" href="../assets/icons/feather-alt-solid.svg">
+  </head>
+  <body class='language-python line-numbers'>
+    <div class='container'>
+      <div class="row header">
+	<div class="col-12 d-flex align-items-center flex-wrap">
+	  <div class='h-elm'> &#9730 </div>
+	  <div class='h-elm'> &#9728 </div>
+	  <div class='h-elm'>&#9731</div>
+	  <div class='h-elm'>&#9998</div>
+	  <div class='h-elm'>&#9822</div>
+	  <div class='h-elm'>&#9825</div>
+	  <div class='h-elm'> &#9836 </div>
+	  <div class='h-elm'> &#9743 </div>
+	  <i class="fas fa-dog fa-sm h-elm"></i>
+	  <i class="fas fa-cat fa-sm h-elm"></i>
+	</div>
+      </div>
+
+      <div class="row main">
+	<div class='col'>
+	  <h1>2.4.11 Implementing Linked List and Dictionary(1)</h1>
+	  <p>Nov 8, 2020</p>
+	  <hr>
+	  <p>This section is going to teach us how to represent a mutable linked list by a higher-order function that has a linked list as its local state. The main skills we need to be prepared are linked list and local state, which are covered in section 2.3.7 and section 2.4.4 respectively. We will learn dispatch functions in this section and deepen our understanding of both of these previous concepts.</p>
+	  <p>By the way, most of the code here is directly copied from <a href='http://composingprograms.com/pages/24-mutable-data.html#implementing-lists-and-dictionaries'>John DeNero's CS61A</a>. The purpose of this article is to reinforce my understanding by sharing my experience and to hopefully help others smooth out any minor obstacles in the process. Any section I mentioned in this article refers to the section on John DeNero's CS61A. I might also use 'the book' to refer to CS61A.</p>
+	  <p>Let's get started. First of all, we need a separate file with linked list definitions written in. You might find it helpful to look back into section 2.3.7.</p>
+	  <pre><code>
+	  empty = 'empty'
+
+	  def link(first, rest=empty):
+	      assert is_link(rest), 'rest must be a list'
+	      return [first, rest]
+
+	  def is_link(s):
+	      return s == empty or (type(s) == list and len(s) == 2 and is_link(s[1]))
+
+	  def first(s):
+	      assert is_link(s), 'first only applies to linked list'
+	      return s[0]
+
+	  def rest(s):
+	      assert is_link(s), 'rest only applies to linked list'
+	      assert len(s) == 2, 'rest only applies to linked list with more than one node'
+	      return s[1]
+
+	  def len_link(s):
+	      assert is_link(s), 'the argument must be a linked list'
+	      if rest(s) == empty:
+		  return 1
+	      return 1 + len_link(rest(s))
+
+	  def getitem_link(s, i):
+	      assert i < len_link(s) - 1, 'the index is out of range'
+	      assert is_link(s), 'the first argument must be a linked list'
+	      if i == 0:
+		  return first(s)
+	      return getitem_link(rest(s), i - 1)
+
+	  def join_link(s, delimiter):
+	      if rest(s) ==  empty:
+		  return str(first(s))
+	      return str(first(s)) + delimiter + join_link(rest(s), delimiter)
+	  </code></pre>   
+	  <p>The last function <mark>join_link</mark> helps to control the way we want to display our linked list.</p>
+	  <p>Now let's add the following function mutable_link into the file. Notice this special dispatch function. You could find it in section 2.4.11</p>
+	  <pre><code>
+	  def mutable_link():
+	      """Return a functional implementation of a mutable linked list."""
+	      contents = empty # contents is a linked list
+	      def dispatch(message, value=None):
+		  nonlocal contents # nonlocal usually appears in higher-order functions
+		  if message == 'len':
+		      # read-only 
+		      return len_link(contents)
+		  elif message == 'getitem':
+		      # read only
+		      return getitem_link(contents, value)
+		  elif message == 'push_first':
+		      # modify the linked list
+		      contents = link(value, contents)
+		  elif message == 'pop_first':
+		      # modify the linked list
+		      result = first(contents)
+		      contents = rest(contents)
+		      return result 
+		  elif message == 'str':
+		      # read-only
+		      return join_link(contents, ", ")
+	      return dispatch
+	  </code></pre>
+
+	  <p>Let's see the magic in our command line.</p>
+	  <pre class='command-line no-line-numbers' data-prompt=">>>" data-filter-output="(out)"><code>
+	  t = mutable_link() # now t is the pointer to the function dispatch; and the contents is empty by definition
+	  t
+	  (out)<\function mutable_link.<\locals>.dispatch at 0x000001FF7A6B2EE0>
+	  t('push_first', 'red') # push the first element -- 'red' at the head of contents
+	  t('str')
+	  (out)'red'
+	  t('push_first', 'green') # push the second element -- 'green' at the head of contents
+	  t('str')
+	  (out)'green, red'
+	  t('len')
+	  (out)2
+	  t('push_first', 'blue')
+	  t('len')
+	  (out)3
+	  t('str')
+	  (out)'blue, green, red'
+	  t('getitem', 2)
+	  (out)'red'
+	  t('pop_first') # pop_first method returns the element that it pops out
+	  (out)'blue'
+	  </code></pre>   
+	  <p>Besides the constructor mutable_link() which always starts with an empty linked list, the book shows us another constructor taking in a sequence and storing it in contents as a linked list.</p>
+	  <pre><code>
+	  def to_mutable_link(source): # source is a sequence(eg. list, range)
+	  """Return a functional linked list with the same contents as source."""
+	      s = mutable_link()
+	      for element in reversed(source):
+		  s('push_first', element)
+	      return s
+	  </code></pre>
+	  <p>We encounter a new method called reversed above. Here's the definition of it from <a href='https://docs.python.org/3/library/functions.html?highlight=reversed#reversed'>Python website</a>:</p>
+	  <p><mark>reversed(seq[uence]):</mark> Return a reverse iterator. seq must be an object which has a __reversed__() method or supports the sequence protocol (the __len__() method and the __getitem__() method with integer arguments starting at 0).</p>
+	  <p>We've learnt that an object with its internal state has its own identity. The same as our function mutable_link(). Let's check it out.</p>
+
+	  <pre class='command-line no-line-numbers' data-prompt=">>>" data-filter-output="(out)"><code>
+	  suite # I have defined suite beforehand and I am going to use it in the second constructor
+	  (out)['heart', 'diamond', 'spade', 'club']
+	  s2 = to_mutable_link(suite)
+	  s2('str')
+	  (out)'heart, diamond, spade, club'
+	  s3 = to_mutable_link(suite)
+	  s3('str')
+	  (out)'heart, diamond, spade, club'
+	  s2 is s3
+	  (out)False # although s2 and s3 have the same contents, but they are distinct objects
+	  </code></pre>
+	  <p>The contents above are all about implementing a dispatching function with a linked list as its internal state. Hope you enjoy it.</p>
+	</div>  <!-- col ends-->
+      </div>  <!--row main ends -->
+
+      <!--footer row begins-->
+      <div class="row footer">
+	<div class="col-12 d-flex justify-content-around align-items-center flex-wrap">
+	  <a href="../index.html"><i class="fas fa-helicopter"></i> Index page</a>
+	  <div>&copy; 2020 PeterLearns2Code<i class="fas fa-feather-alt"></i></div>
+	  <div>Email: lh6210@gmail.com</div>
+	  <div><a href="https://twitter.com/PeterLi06"><i class="fab fa-twitter-square fa-2x"></i></a></div>
+	</div>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s" crossorigin="anonymous"></script>
+    <script src='sort.js'></script>
+    <script src='../assets/styles/prism.js'></script>
+  </body>
+</html>
