@@ -34,11 +34,11 @@
       <div class="row main">
 	<div class='col'>
 	  <h1>2.4.11/12 Implementing Linked List and Dictionary(2)</h1>
-	  <p>Nov 8, 2020</p>
+	  <p>Nov 9, 2020</p>
 	  <hr>
-	  <p>Announcement: most of the code here is directly copied from <a href='http://composingprograms.com/pages/24-mutable-data.html#implementing-lists-and-dictionaries'>John DeNero's CS61A</a>. The purpose of this article is to reinforce my understanding by sharing my experience and to hopefully help others smooth out any minor obstacles in their study process. Any section I mentioned in this article refers to the section on John DeNero's CS61A. I might also use 'the book' to refer to CS61A.</p>
-	  <p>In the second part, the book teaches us how to implement a dictionary with its own internal state.</p>
-	  <p>Let's open a new file and write the code in. It's from section 2.4.11.</p>
+	  <p>Announcement: some of the code here is directly copied from <a href='http://composingprograms.com/pages/24-mutable-data.html#implementing-lists-and-dictionaries'>John DeNero's CS61A</a>. The purpose of this article is to reinforce my understanding by sharing my experience and to hopefully help others smooth out any minor obstacles in their study process. Any section I mentioned in this article refers to the section in John DeNero's CS61A. I might also use 'the book' to refer to CS61A.</p>
+	  <p>In the second part, the book teaches us how to integrate a dispatch function into a higher-order function. The dispatch function calls the specific internal function according to the message it is given.</p>
+	  <p>Let's open a new file and try the code in the book. It's from section 2.4.11.</p>
 	  <pre><code>
 	  def dictionary():
 	      """Return a functional implementation of a dictionary"""
@@ -77,7 +77,11 @@
 	  (out)'coffee'
 	  </code></pre>
 
-	  <p>These are the contents in section 2.4.11 -- implementing linked lists and dictionaries. The key concepts covered are internal state, message passing interface with dispatch functions. What's more interesting is in section 2.4.12, where the book switches from using conditional statements in dispatch functions to using Python's built-in dictionary data type.</p>
+	  <p>These are the contents in section 2.4.11 -- implementing linked lists and dictionaries. The key concepts covered are internal state(linked list in our example), message passing interface with dispatch functions. What's more interesting is in section 2.4.12, where the book switches from dispatch functions to Python's built-in dictionary. As far as I could see, the benefits of the transition are:</p>
+	    <ol>
+	      <li>We don't need to write conditional statements in the dispatch function any more;</li>
+	      <li>The internal state has become the value in one key-value pair inside the dispatch dictionary and we don't need to define it inside the higher-order function and nonlocal statements are no longer needed.</li>
+	    </ol>
 	  <p>Let's see the implementation:</p>
 	  <pre><code>
 	  def account(initial_balance):        # higher-order function again
@@ -121,7 +125,166 @@
 	  check_balance(a)
 	  35
 	  </code></pre>   
-	  <p>I feel the dictionary approach is very neat. Let's rewrite the previous part in this way.</p>
+	  <p>I feel the dispatch dictionary approach is very neat. Let's rewrite the previous part -- mutable linked list in this way.</p>
+	  <p>Firstly, we need a new file with the linked list structure written in. This part lays down the foundation of linked list construction and manipulations.</p>
+	  <pre><code>
+	  empty = 'empty'
+
+	  def link(first, rest=empty):
+	      assert is_link(rest), 'rest must be a list'
+	      return [first, rest]
+
+	  def is_link(s):
+	      return s == empty or (type(s) == list and len(s) == 2 and is_link(s[1]))
+
+	  def first(s):
+	      assert is_link(s), 'first only applies to linked list'
+	      return s[0]
+
+	  def rest(s):
+	      assert is_link(s), 'rest only applies to linked list'
+	      assert len(s) == 2, 'rest only applies to linked list with more than one node'
+	      return s[1]
+
+	  def len_link(s):
+	      if s == empty:
+		  return 0
+	      elif rest(s) == empty:
+		  return 1
+	      return 1 + len_link(rest(s))
+
+	  def getitem_link(s, i):
+	      if i == 0:
+		  return first(s)
+	      return getitem_link(rest(s), i - 1)
+
+	  def join_link(s, separator):
+	      if s == empty:
+		  return empty
+	      if rest(s) ==  empty:
+		  return str(first(s))
+	      return str(first(s)) + separator + join_link(rest(s), separator)
+
+	  def extend_link(s, t):
+	      """Return a list with the elements of s followed by those of t"""
+	      assert is_link(t), 'arguments must be linked lists'
+	      if s == empty:
+		  return t
+	      else:
+		  return link(first(s), extend(rest(s), t))
+
+	  def insert_link(s, i, value):
+	      assert i <= len_link(s) - 1, 'index is out of range'
+	      if i == 0:
+		  return link(value, s) 
+	      else:
+		  u = s
+		  for _ in range(i-1):
+		      u = rest(u) # go i - 1 times
+		  v = link(value, rest(u))
+		  u[1] = v
+		  return s 
+	  </code></pre>
+	  <p>Then next part is the dispatch dictionary within the higher-order function -- mutable_link. All of the methods inside mutable_link have the names coming from dispatch_dict's key-value pairs(values of the key-value pairs, to be more specific) and bodies utilizing the linked list structure defined above.</p>
+	  <p>The key point is that all of the methods have the privilege to access and modify the contents inside the dispatch dictionary. They are like bridges connecting the linked list structure and the internal state of the higher-order function mutable_link while the internal state is designed as a linked list.</p>
+	  <pre><code>
+	  def mutable_link():
+	      def dict_len():
+		  return len_link(dispatch_dict['contents'])
+	      def dict_getitem(index):
+		  return getitem_link(dispatch_dict['contents'], index)
+	      def dict_push_first(value):
+		  dispatch_dict['contents'] = link(value, dispatch_dict['contents'])
+		  return dispatch_dict['contents']
+	      def dict_pop_first():
+		  result = first(dispatch_dict['contents'])
+		  update = rest(dispatch_dict['contents'])
+		  dispatch_dict['contents'] = update
+		  return result
+	      def dict_insert(index, value):
+		  return insert_link(dispatch_dict['contents'], index, value)
+	      def dict_display(separator):
+		  return join_link(dispatch_dict['contents'], separator)
+	      dispatch_dict = { 'len': dict_len,
+				'getitem': dict_getitem,
+				'push_first': dict_push_first,
+				'pop_first': dict_pop_first,
+				'insert': dict_insert,
+				'str': dict_display, 
+				'contents': empty
+				}
+	      return dispatch_dict
+	  </code></pre>
+	  <p>Now is the time for command line test:</p>
+	  <pre class='command-line no-line-numbers' data-prompt=">>>" data-filter-output="(out)"><code>
+	  s = mutable_link()
+	  s['len']()
+	  (out)0
+	  s['push_first']('red')
+	  (out)['red', 'empty']
+	  s['push_first']('green')
+	  (out)['green', ['red', 'empty']]
+	  s['push_first']('blue')
+	  (out)['blue', ['green', ['red', 'empty']]]
+	  s['str'](', ')
+	  (out)'blue, green, red'
+	  s['str']('|')
+	  (out)'blue|green|red'
+	  s['insert'](2, 'white')
+	  (out)['blue', ['green', ['white', ['red', 'empty']]]]
+	  s['str']('**')
+	  (out)'blue**green**white**red'
+	  s['pop_first']()
+	  (out)'blue'
+	  s['str']('--')
+	  (out)'green--white--red'
+	  </code></pre>
+	  <p>Looks like it functions as expected, yeah? Though the commands look ugly. The way the book handles the issue is to define more readable corresponding functions. Let's add the six corresponding functions into the file.</p>
+	  <pre><code>
+	  def api_len(lk):
+	      return lk['len']()
+
+	  def api_getitem(lk, index):
+	      return lk['getitem'](index)
+
+	  def api_push_first(lk, value):
+	      return lk['push_first'](value)
+
+	  def api_pop_first(lk):
+	      return lk['pop_first']()
+
+	  def api_insert(lk, index, value):
+	      return lk['insert'](index, value)
+
+	  def api_join(lk, separator):
+	      return lk['str'](separator)
+	  </code></pre>
+	  <p>And do the same operations once more.</p>
+	  <pre class='command-line no-line-numbers' data-prompt=">>>" data-filter-output="(out)"><code>
+	  s = mutable_link()
+	  api_len(s)
+	  (out)0
+	  api_push_first(s, 'red')
+	  (out)['red', 'empty']
+	  api_push_first(s, 'green')
+	  (out)['green', ['red', 'empty']]
+	  api_push_first(s, 'blue')
+	  (out)['blue', ['green', ['red', 'empty']]]
+	  api_join(s, ', ')
+	  (out)'blue, green, red'
+	  api_join(s, '|')
+	  (out)'blue|green|red'
+	  api_insert(s, 2, 'white')
+	  (out)['blue', ['green', ['white', ['red', 'empty']]]]
+	  api_join(s, '**')
+	  (out)'blue**green**white**red'
+	  api_pop_first(s)
+	  (out)'blue'
+	  api_join(s, '--')
+	  (out)'green--white--red'
+	  </code></pre>
+
+	  <p>Mission completed! Thanks for reading this article and have a good time!</p>
 	</div>  <!-- col ends-->
       </div>  <!--row main ends -->
 
